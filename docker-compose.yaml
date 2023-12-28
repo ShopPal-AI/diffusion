@@ -1,0 +1,61 @@
+version: "3.8"
+services:
+  train:
+    build:
+      context: .
+      args:
+        - http_proxy=http://10.232.14.15:8118
+        - https_proxy=http://10.232.14.15:8118
+      tags:
+        - ghcr.io/shoppal-ai/diffusion:dev
+    image: ghcr.io/shoppal-ai/diffusion:${IMAGE_TAG:-latest}
+    command:
+      - composer
+      - run.py
+      - --config-path
+      - yamls/shoppal-yamls
+      - --config-name
+      - SD-2-base-256.yaml
+    shm_size: "100gb"
+    env_file: .env
+    volumes:
+      - /data0:/data0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: all # if you want to use all gpus, just set count: all
+              # device_ids: ['4'] # if you want to use specific gpus, set device_ids: [1, 2, 3]
+
+  eval:
+    build:
+      context: .
+      args:
+        - http_proxy=http://10.232.14.15:8118
+        - https_proxy=http://10.232.14.15:8118
+      tags:
+        - ghcr.io/shoppal-ai/diffusion:dev
+    image: ghcr.io/shoppal-ai/diffusion:${IMAGE_TAG:-latest}
+    command:
+      - composer
+      - run_eval.py
+      - --config-path
+      - yamls/shoppal-yamls
+      - --config-name
+      - eval-clean-fid.yaml
+    shm_size: "100gb"
+    env_file: .env
+    volumes:
+      - /data0:/data0
+    depends_on:
+      - train
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: all # if you want to use all gpus, just set count: all
+              # device_ids: ['4'] # if you want to use specific gpus, set device_ids: [1, 2, 3]
