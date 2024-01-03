@@ -4,8 +4,8 @@ services:
     build:
       context: .
       args:
-        - http_proxy=http://10.232.14.15:8118
-        - https_proxy=http://10.232.14.15:8118
+        - http_proxy=${http_proxy:-}
+        - https_proxy=${https_proxy:-}
       tags:
         - ghcr.io/shoppal-ai/diffusion:dev
     image: ghcr.io/shoppal-ai/diffusion:${IMAGE_TAG:-latest}
@@ -33,8 +33,8 @@ services:
     build:
       context: .
       args:
-        - http_proxy=http://10.232.14.15:8118
-        - https_proxy=http://10.232.14.15:8118
+        - http_proxy=${http_proxy:-}
+        - https_proxy=${https_proxy:-}
       tags:
         - ghcr.io/shoppal-ai/diffusion:dev
     image: ghcr.io/shoppal-ai/diffusion:${IMAGE_TAG:-latest}
