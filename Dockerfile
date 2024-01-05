@@ -14,6 +14,7 @@ COPY pyproject.toml /workspace/pyproject.toml
 COPY Makefile /workspace/Makefile
 
 WORKDIR /workspace
+RUN pip config set global.index-url https://pypi.org/simple
 RUN pip install -e .
 RUN pip install torch==2.0.1+cu118 -f https://download.pytorch.org/whl/cu118/torch_stable.html
 RUN pip install torchvision==0.15.2+cu118 -f https://download.pytorch.org/whl/cu118/torch_stable.html
